@@ -1,0 +1,138 @@
+\documentclass{article}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}
+\usepackage{fullpage}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{amsmath }
+
+\begin{document}
+\title{Отчет по домашнему заданию}
+\pretitle{\vspace{\droptitle}\centering\huge}
+\posttitle{\par}
+\author{Фахртдинов Т. А.}
+
+
+\maketitle
+Восьмая задача. 
+Исследование зависимости между количественными признаками.
+
+Вариант 3.
+<<>>=
+h <- c(1.1, 4.6, 0.7, 4.0, 0.7, 27.6, 20.9, 55.6, 69.0, 23.0, 19.5, 8.9, 50.4,
+       39.9, 20.7, 26.6, 13.9, 23.6, 16.2, 29.9, 13.9, 65.2, 31.4, 26.0, 25.0)
+t <- c(73.2, 71.9, 76.4, 72.1, 71.9, 83.5, 85.9, 85, 82.3, 84.5, 85.3, 85.3,
+       84.1, 74.3, 71, 69.5, 59.1, 73.1, 75.7, 81.9, 62.1, 72.6, 72.6, 77.9, 77.7)
+@
+\textbf{Получаем оценки параметров линейной регрессии.}
+<<>>=
+n <- length(h)
+beta <- (sum(h * t) - n * mean(h) * mean(t)) /
+        (sum(h * h) - n * mean(h)^2)
+alpha <- mean(t) - beta * mean(h)
+@
+Коэффициенты $\alpha$, $\beta$ соответственно равны:
+<<echo=FALSE>>=
+c(alpha, beta)
+@
+\textbf{Проверим значимость оценок:}
+<<>>=
+Y <- alpha + beta * h
+Qe <- sum((t - Y)^2)
+S2 <- Qe / (n - 2)
+S2.alpha <- S2 * sum(h * h) / (n * sum((h - mean(h))^2))
+S2.beta <- S2 / sum((h - mean(h))^2)
+T_a <- alpha / sqrt(S2.alpha)
+T_b <- beta / sqrt(S2.beta)
+@
+Значения критерия и p-value, для $\alpha$ и $\beta$ соответственно:
+<<echo=FALSE>>=
+c(T_a, 2 * min(1 - pt(T_a, n - 2), pt(T_a, n - 2)))
+c(T_b, 2 * min(1 - pt(T_b, n - 2), pt(T_b, n - 2)))
+@
+
+\newpage
+Найдем значение параметров с помощью встроенной функции:
+<<>>=
+summary(lm(t~h))
+@
+Полученные значения параметров совпадают со значениями, полученными нами. Так же, полученные значения критериев и p-value совпадают с полученными нами.
+
+\newline
+
+$p-value_{\alpha} < 0.05$, отклоняем гипотезу о равенстве коэффициента нулю.
+
+$p-value_{\beta} > 0.05$, нет оснований отклонить гипотезу о равенстве коэффициента нулю.
+
+\newline
+
+\textbf{На одном графике строим двумерную диаграмму признаков и проводим линию регрессии.}
+<<fig.height=4>>=
+step <- seq(min(h), max(h), by = 0.1)
+Y <- alpha + beta*step
+S <- sqrt(S2*( 1/n + (step - mean(h))^2/sum((h - mean(h))^2)))
+confInt1 <- Y - qt(1-0.05/2, n - 2) * S
+confInt2 <- Y + qt(1-0.05/2, n - 2) * S
+confInt <- cbind(confInt1, confInt2, Y)
+matplot(step,
+        confInt, col=c("blue","blue","red"),lty=c(2,2,1),
+        type= "l", ylab = "t", xlab = "h")
+        points(h, t, pch = 19, cex = 0.5)
+@
+
+Теперь воспользуемся функцией пакета ggplot, для построения:
+
+<<warning=FALSE, echo=FALSE, fig.width=7, fig.height=3.5>>=
+library("ggplot2")
+ggplot(data.frame(h, t), aes(x = h, y = t))+
+      geom_point()+
+      geom_smooth(method = 'lm')
+@
+
+\newpage
+
+\textbf{Вычислим коэффициенты корреляции и детерминации.}
+
+Коэффициент детерминации:
+<<>>=
+Q <- sum((t - mean(t))^2)
+R_2 <- 1 - Qe / Q
+R_2
+@
+Коэффициент корреляции:
+<<>>=
+rho <- sum((h - mean(h)) * (t - mean(t)))
+rho <- rho / (sqrt(sum((h - mean(h))^2)) * sqrt(sum((t - mean(t))^2)))
+rho
+@
+
+\textbf{Значимость коэффициента корреляции:}
+
+Проверяется гипотеза $H_0$: $\rho = 0$
+<<>>=
+T_rho<- rho * (n - 2) / sqrt(1 - rho^2)
+pval_rho <- 2 * min(1 - pt(T_rho, n - 2), pt(T_rho, n - 2))
+@
+Значение критерия и p-value:
+<<echo=FALSE>>=
+c(T_rho, pval_rho)
+@
+8.266966e-08 < 0.05, отклоняем гипотезу о равенстве коэффициента корреляции нулю.
+
+\textbf{Значимость коэффициента детерминации:}
+
+Проверяется гипотеза $H_0$: $R^2 = 0$
+<<>>=
+T_r2<- sqrt(R_2) * (n - 2) / sqrt(1 - R_2)
+pval_r2 <- 2 * min(1 - pt(T_r2, n - 2), pt(T_r2, n - 2))
+@
+Значение критерия и p-value:
+<<echo=FALSE>>=
+c(T_r2, pval_r2)
+@
+8.266966e-08 < 0.05, отклоняем гипотезу о равенстве коэффициента детерминации нулю. Что ожидаемо, так как проверка гипотезы о равенстве коэффициента детерминации нулю эквивалентна проверке гипотезы о равенстве нулю коэффициента корреляции.
+
+\end{document}

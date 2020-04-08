@@ -1,0 +1,96 @@
+\documentclass{article}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}
+\usepackage{fullpage}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{amsmath }
+
+\begin{document}
+\title{Отчет по домашнему заданию}
+\pretitle{\vspace{\droptitle}\centering\huge}
+\posttitle{\par}
+\author{Фахртдинов Т. А.}
+
+
+\maketitle
+Седьмая задача. Проверка гипотез однородности для зависимых
+выборок.
+
+Вариант 3.
+
+\textbf{При помощи параметрического критерия Стьюдента для зависимых выборок выясним, значимо ли изменение в клинических показателях больных при поступлении в стационар и при их выписке.}
+<<>>=
+SH1 <- c(8.1, 6.2, 6.11, 5.23, 5.2, 8.12, 6.21, 6.21, 5, 6, 8.16, 4.96, 5.36, 5.92, 8.32
+         , 8.08, 6.52, 5.2, 7, 5, 6.3, 6.1, 5.95, 5.2, 8.5, 8.2, 7.3, 6.45, 5.2, 6.2
+         , 4.95, 6.45, 4.95, 6.55, 6.5, 5.9, 6.2, 6.5, 7.7, 7.2, 7, 7.4, 7.8, 7.2, 7)
+
+SH2 <- c(8.9, 8.16, 8.1, 7.44, 7.46, 8.91, 8.1,8.41, 7.44, 8.43, 8.92, 6.48, 7.2, 7.4, 8.9
+         , 8.9, 8.1, 6.88, 8.6, 7.2, 8.4, 8.4, 8.4, 7.4, 8.91, 8.9, 8.8, 8.1, 7.4, 8.4
+         , 7.3, 7.9, 7.36, 8.1, 8, 8.4 , 8.2, 8.3, 8, 8.1, 8.2, 8.6, 8.5, 8.6, 8.5)
+
+SH <- SH1 - SH2
+T <- mean(SH) * sqrt(length(SH)) / sqrt(var(SH))
+@
+Значение критерия и p-value:
+<<echo=FALSE>>=
+mean.SH1 <- mean(SH1)
+mean.SH2 <- mean(SH2)
+stErr.SH1 <- sd(SH1) / sqrt(length(SH1))
+stErr.SH2 <- sd(SH2) / sqrt(length(SH2))
+
+c(T, 2 * min(pt(T, length(SH) - 1), 1 - pt(T, length(SH) - 1)))
+@
+Найдем значение критерия с помощью встроенной функции:
+<<>>=
+t.test(SH)
+@
+Значение, которое получили мы совпало со значением встроенной функции.
+
+p-value < 0.05, отклоняем гипотезу о равенстве средних.
+
+Для SH1, среднее \textpm ошибка среднего: 6.48 \textpm 0.159.
+
+Для SH2, среднее \textpm ошибка среднего: 8.113 \textpm 0.091.
+
+\newpage
+
+\textbf{Уменьшается или увеличивается преступность. Cochren Q тест:}
+
+$H_0:$ Уровень преступности не изменился.
+<<>>=
+W1 <- c(60, 8, 34, 31, 21, 42, 2, 6, 21, 2)
+W2 <- c(61, 7, 46, 24, 21, 45, 2, 1, 23, 0)
+W3 <- c(57, 12, 44, 12, 11, 46, 2, 4, 17, 2)
+
+m <- median(W1)
+
+W1 <- as.numeric(W1 > m)
+W2 <- as.numeric(W2 > m)
+W3 <- as.numeric(W3 > m)
+
+s <- 3
+N <- sum(W1) + sum(W2) + sum(W3)
+
+a <- (sum(W1) - N / s)^2 + (sum(W2) - N / s)^2 + (sum(W3) - N / s)^2
+b <- 0
+for(i in 1:length(W1)) {
+  temp <- W1[i] + W2[i] + W3[i]
+  b <- b + temp * (s - temp)
+}
+
+T <- s * (s - 1) * a / b
+pval <- 1 - pchisq(T, s - 1)
+@
+Значение критерия и p-value:
+<<echo=FALSE>>=
+c(T, pval)
+@
+p-value > 0.05, нет оснований отклонить гипотезу о неизменности уровня преступности
+
+
+
+\end{document}

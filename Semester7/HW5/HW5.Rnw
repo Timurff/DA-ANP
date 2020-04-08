@@ -1,0 +1,148 @@
+\documentclass{article}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}
+\usepackage{fullpage}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{amsmath }
+
+\begin{document}
+\title{Отчет по домашнему заданию}
+\pretitle{\vspace{\droptitle}\centering\huge}
+\posttitle{\par}
+\author{Фахртдинов Т. А.}
+
+
+\maketitle
+Пятая задача.
+Распределения, связанные с нормальным.
+
+1) Построить графики плотности гамма - распределения. Указать среди них распределения хи - квадрат
+
+<<echo=FALSE, warning=FALSE>>=
+m <- 0
+M <- 2
+si <- 0.4
+step <- 0.05
+
+xs <- seq(m, M, step)
+@
+Gamma(0.5, 2) совпадает с хи-квадрат со степенью свободы = 1.
+
+<<echo=FALSE, warning=FALSE, fig.width=6, fig.height=3.5>>=
+plot(xs, dgamma(xs, shape = 0.5, scale = 0.5), "l", col = "red", ylab = "", xlab = "")
+lines(xs, dgamma(xs, shape = 0.5, scale = 1), "l", col = "green")
+lines(xs, dgamma(xs, shape = 0.5, scale = 2), "l", col = "blue")
+lines(xs, dchisq(xs, 1), "b", pch = 23, cex = si)
+legend("top", legend=c("Gamma(0.5, 0.5)", "Gamma(0.5, 1)", "Gamma(0.5, 2)", "Chi Sq.(1)"),col=c("red", "green","blue", 'black'), lty=c(1,1,1,4), cex=0.8, plot = TRUE)
+?dgamma
+@
+\newpage
+Gamma(1, 2) совпадает с хи-квадрат со степенью свободы = 2.
+
+<<echo=FALSE, warning=FALSE, fig.width=6, fig.height=4>>=
+plot(xs, dgamma(xs, shape = 1, scale = 0.5), "l", col = "red", ylab = "", xlab = "")
+lines(xs, dgamma(xs, shape = 1, scale = 1), "l", col = "green")
+lines(xs, dgamma(xs, shape = 1, scale = 2), "l", col = "blue")
+lines(xs, dchisq(xs, 2), "b", pch = 23, cex = si)
+legend("top", legend=c("Gamma(1, 0.5)", "Gamma(1, 1)", "Gamma(1, 2)", "Chi Sq.(2)"),col=c("red", "green","blue", "black"), lty=c(1,1,1,4), cex=0.8, plot = TRUE)
+@
+Gamma(5, 2) совпадает с хи-квадрат со степенью свободы = 10.
+
+<<echo=FALSE, warning=FALSE, fig.width=6, fig.height=4>>=
+xs <- seq(m, 50, step)
+si <- 0.2
+plot(xs, dgamma(xs, shape = 5, scale = 0.5), "l", col = "red", ylab = "", xlab = "")
+lines(xs, dgamma(xs, shape = 5, scale = 1), "l", col = "green")
+lines(xs, dgamma(xs, shape = 5, scale = 2), "l", col = "blue")
+lines(xs, dchisq(xs, 10), "b", pch = 23, cex = si)
+legend("topright", legend=c("Gamma(5, 0.5)", "Gamma(5, 1)", "Gamma(5, 2)", "Chi Sq.(10)"),col=c("red", "green","blue", "black"), lty=c(1,1,1,4), cex=0.8, plot = TRUE)
+@
+\newpage
+Gamma(10, 2) совпадает с хи-квадрат со степенью свободы = 20.
+
+<<echo=FALSE, warning=FALSE, fig.width=6, fig.height=4>>=
+plot(xs, dgamma(xs, shape = 10, scale = 0.5), "l", col = "red", ylab = "", xlab = "")
+lines(xs, dgamma(xs, shape = 10, scale = 1), "l", col = "green")
+lines(xs, dgamma(xs, shape = 10, scale = 2), "l", col = "blue")
+lines(xs, dchisq(xs, 20), "b", pch = 23, cex = si)
+legend("topright", legend=c("Gamma(10, 0.5)", "Gamma(10, 1)", "Gamma(10, 2)", "Chi Sq.(20)"),col=c("red", "green","blue", "black"), lty=c(1,1,1,4), cex=0.8, plot = TRUE)
+@
+Gamma(15, 2) совпадает с хи-квадрат со степенью свободы = 30.
+
+<<echo=FALSE, warning=FALSE, fig.width=6, fig.height=4>>=
+plot(xs, dgamma(xs, shape = 15, scale = 0.5), "l", col = "red", ylab = "", xlab = "")
+lines(xs, dgamma(xs, shape = 15, scale = 1), "l", col = "green")
+lines(xs, dgamma(xs, shape = 15, scale = 2), "l", col = "blue")
+lines(xs, dchisq(xs, 30), "b", pch = 23, cex = si)
+legend("topright", legend=c("Gamma(15, 0.5)", "Gamma(15, 1)", "Gamma(15, 2)", "Chi Sq.(30)"),col=c("red", "green","blue", "black"), lty=c(1,1,1,4), cex=0.8, plot = TRUE)
+@
+\newpage
+2) Построим графики плотности распределения Стьюдента для разного числа степеней свободы. Выясним, при каком объеме выборки распределение Стьюдента практически совпадает с нормальным.
+
+5 степеней свободы:
+
+<<echo=FALSE, warning=FALSE, fig.width=6, fig.height=3.5>>=
+xs <- seq(-5, 5, step)
+plot(xs, dt(xs, 5), "l", col = "black", ylab = "", xlab = "")
+lines(xs, dnorm(xs), col = "red", "l")
+legend("topleft", legend=c("N(0,1)", "t(5)"), col=c("red", "black"), lty = 1, cex=0.8)
+@
+
+10 степеней свободы:
+
+<<echo=FALSE, warning=FALSE, fig.width=6, fig.height=3.5>>=
+xs <- seq(-5, 5, step)
+plot(xs, dt(xs, 10), "l", col = "black", ylab = "", xlab = "")
+lines(xs, dnorm(xs), col = "red", "l")
+legend("topleft", legend=c("N(0,1)", "t(10)"), col=c("red", "black"), lty = 1, cex=0.8)
+@
+\newpage
+15 степеней свободы:
+
+<<echo=FALSE, warning=FALSE, fig.width=6, fig.height=4>>=
+xs <- seq(-5, 5, step)
+plot(xs, dt(xs, 15), "l", col = "black", ylab = "", xlab = "")
+lines(xs, dnorm(xs), col = "red", "l")
+legend("topleft", legend=c("N(0,1)", "t(15)"), col=c("red", "black"), lty = 1, cex=0.8)
+@
+
+25 степеней свободы:
+
+<<echo=FALSE, warning=FALSE, fig.width=6, fig.height=4>>=
+xs <- seq(-5, 5, step)
+plot(xs, dt(xs, 25), "l", col = "black", ylab = "", xlab = "")
+lines(xs, dnorm(xs), col = "red", "l")
+legend("topleft", legend=c("N(0,1)", "t(25)"), col=c("red", "black"), lty = 1, cex=0.8)
+@
+\newpage
+30 степеней свободы:
+
+<<echo=FALSE, warning=FALSE, fig.width=6, fig.height=4>>=
+xs <- seq(-5, 5, step)
+plot(xs, dt(xs, 30), "l", col = "black", ylab = "", xlab = "")
+lines(xs, dnorm(xs), col = "red", "l")
+legend("topleft", legend=c("N(0,1)", "t(30)"), col=c("red", "black"), lty = 1, cex=0.8)
+@
+
+Распределение Стьюдента с 30 степенями свободы практически не отличается от стандартного нормального
+
+\newpage
+
+3) Построить графики плотности распределения Фишера при разных параметрах
+
+<<echo=FALSE, warning=FALSE>>=
+xs <- seq(m, M, step)
+plot(xs, df(xs, 1, 1), "l", col = "black", ylab = "", xlab = "")
+lines(xs, df(xs, 10, 2), "l", col = "red")
+lines(xs, df(xs, 20, 1), "l", col = "green")
+lines(xs, df(xs, 50, 10), "l", col = "orange")
+lines(xs, df(xs, 50, 1), "l", col = "blue")
+legend("topright", legend=c("F(1, 1)", "F(10, 2)", "F(20, 1)", "F(50, 10)", "F(50, 1)"),col=c("black", "red", "green", "orange", "blue"), lty=1, cex=0.8, plot = TRUE)
+@
+
+
+\end{document}

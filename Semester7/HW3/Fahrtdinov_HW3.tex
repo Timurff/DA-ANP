@@ -1,0 +1,249 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}
+\usepackage{fullpage}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{amsmath }
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+\title{Отчет по домашнему заданию}
+\pretitle{\vspace{\droptitle}\centering\huge}
+\posttitle{\par}
+\author{Фахртдинов Т. А.}
+
+
+\maketitle
+Третья задача. Статистический анализ категориальных(независимых) признаков.
+
+Имеется таблица сопряженности факторов "угнетенное депрессивное состояние при алкогольном  абстинентном синдроме" и "слабость". Нужно проверить независимость признаков.
+\begin{center}
+    \begin{tabular}{|r|r|r|r|} \hline
+           & Weakness 1 & Weakness 2 & Row totals\\ \hline
+         1 & 15 & 11 & 26\\ \hline
+         2 & 0 & 5 & 5 \\ \hline
+         Totals & 15 & 16 & 31 \\ \hline
+         
+    \end{tabular}
+\end{center}
+
+а) Критерий равенства частот:
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{a} \hlkwb{<-} \hlnum{15}
+\hlstd{b} \hlkwb{<-} \hlnum{11}
+\hlstd{c} \hlkwb{<-} \hlnum{0}
+\hlstd{d} \hlkwb{<-} \hlnum{5}
+\hlstd{n} \hlkwb{<-} \hlnum{31}
+\hlstd{Z} \hlkwb{<-} \hlstd{(b}\hlopt{*}\hlstd{c} \hlopt{-} \hlstd{a}\hlopt{*}\hlstd{d)}\hlopt{*}\hlkwd{sqrt}\hlstd{(n)} \hlopt{/} \hlkwd{sqrt}\hlstd{((a} \hlopt{+} \hlstd{b)}\hlopt{*}\hlstd{(c} \hlopt{+} \hlstd{d)}\hlopt{*}\hlstd{(a} \hlopt{+} \hlstd{c)}\hlopt{*}\hlstd{(b} \hlopt{+} \hlstd{d))}
+\hlstd{Z}
+\end{alltt}
+\begin{verbatim}
+## [1] -2.364094
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Если критерии независимы, то статистика Z будет иметь стандартное нормальное распределение.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{p_val} \hlkwb{<-} \hlnum{2} \hlopt{*} \hlkwd{pnorm}\hlstd{(}\hlopt{-}\hlkwd{abs}\hlstd{(Z))}
+\hlstd{p_val}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.01807421
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+p-value = 0.018 < 0.05, отклоняем гипотезу о независимости.
+\newpage
+б) Точный критерий Фишера: 
+
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{chi_t_0} \hlkwb{<-} \hlstd{(a}\hlopt{*}\hlstd{d} \hlopt{-} \hlstd{b}\hlopt{*}\hlstd{c)}\hlopt{^}\hlnum{2} \hlopt{*} \hlstd{(n)} \hlopt{/} \hlstd{((a} \hlopt{+} \hlstd{b)}\hlopt{*}\hlstd{(c} \hlopt{+} \hlstd{d)}\hlopt{*}\hlstd{(a} \hlopt{+} \hlstd{c)}\hlopt{*}\hlstd{(d} \hlopt{+} \hlstd{b))}
+\hlstd{p_t} \hlkwb{<-} \hlnum{0}
+\hlkwa{for} \hlstd{(x} \hlkwa{in} \hlstd{(}\hlopt{-}\hlstd{d}\hlopt{+}\hlstd{a)}\hlopt{:}\hlstd{(a}\hlopt{+}\hlstd{c)) \{}
+  \hlstd{b1} \hlkwb{<-} \hlstd{a} \hlopt{+} \hlstd{b} \hlopt{-} \hlstd{x}
+  \hlstd{c1} \hlkwb{<-} \hlstd{a} \hlopt{+} \hlstd{c} \hlopt{-} \hlstd{x}
+  \hlstd{d1} \hlkwb{<-} \hlstd{(c} \hlopt{+} \hlstd{d)} \hlopt{-} \hlstd{(a} \hlopt{+} \hlstd{c} \hlopt{-} \hlstd{x)}
+  \hlstd{chi_t} \hlkwb{<-} \hlstd{n}\hlopt{*}\hlstd{(x} \hlopt{*} \hlstd{d1} \hlopt{-} \hlstd{b1} \hlopt{*} \hlstd{c1)}\hlopt{^}\hlnum{2} \hlopt{/} \hlstd{((x} \hlopt{+} \hlstd{b1)}\hlopt{*}\hlstd{(c1} \hlopt{+} \hlstd{d1)}\hlopt{*}\hlstd{(x} \hlopt{+} \hlstd{c1)}\hlopt{*}\hlstd{(b1} \hlopt{+} \hlstd{d1))}
+  \hlstd{chi_t}
+  \hlstd{chi_t} \hlopt{-} \hlstd{chi_t_0}
+  \hlkwa{if} \hlstd{(chi_t} \hlopt{>=} \hlstd{chi_t_0)\{}
+    \hlstd{temp} \hlkwb{<-} \hlkwd{factorial}\hlstd{(a} \hlopt{+} \hlstd{b)}\hlopt{*}
+            \hlkwd{factorial}\hlstd{(a} \hlopt{+} \hlstd{c)}\hlopt{*}
+            \hlkwd{factorial}\hlstd{(c} \hlopt{+} \hlstd{d)}\hlopt{*}
+            \hlkwd{factorial}\hlstd{(d} \hlopt{+} \hlstd{b)}
+    \hlstd{temp} \hlkwb{<-} \hlstd{temp} \hlopt{/} \hlstd{(}\hlkwd{factorial}\hlstd{(x)}\hlopt{*}
+                    \hlkwd{factorial}\hlstd{(a} \hlopt{+} \hlstd{b} \hlopt{-} \hlstd{x)}\hlopt{*}
+                    \hlkwd{factorial}\hlstd{(a} \hlopt{+} \hlstd{c} \hlopt{-} \hlstd{x)}\hlopt{*}
+                    \hlkwd{factorial}\hlstd{(d} \hlopt{-} \hlstd{a} \hlopt{+} \hlstd{x)}\hlopt{*}
+                    \hlkwd{factorial}\hlstd{(a} \hlopt{+} \hlstd{b} \hlopt{+} \hlstd{c}  \hlopt{+}\hlstd{d))}
+    \hlstd{p_t} \hlkwb{<-} \hlstd{p_t} \hlopt{+} \hlstd{temp}
+  \hlstd{\}}
+\hlstd{\}}
+
+\hlstd{p_t}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.04338154
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Получили значение 0.04338 < 0.05, отклоняем гипотезу о независимости.
+
+Воспользуемся встроенной функцией fisher.test
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{fisher.test}\hlstd{(tab)}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	Fisher's Exact Test for Count Data
+## 
+## data:  tab
+## p-value = 0.04338
+## alternative hypothesis: true odds ratio is not equal to 1
+## 95 percent confidence interval:
+##  0.9885589       Inf
+## sample estimates:
+## odds ratio 
+##        Inf
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Полученное значение критерия совпадает со значением, которое мы получили ранее.
+\newpage
+в) Критерий независимости Пирсона:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{chi} \hlkwb{<-} \hlstd{n} \hlopt{*} \hlstd{(a} \hlopt{*} \hlstd{d} \hlopt{-} \hlstd{b} \hlopt{*} \hlstd{c)}\hlopt{^}\hlnum{2} \hlopt{/} \hlstd{((a} \hlopt{+} \hlstd{b)}\hlopt{*}\hlstd{(c} \hlopt{+} \hlstd{d)}\hlopt{*}\hlstd{(a} \hlopt{+} \hlstd{c)}\hlopt{*}\hlstd{(d} \hlopt{+} \hlstd{b))}
+\hlstd{p_val_1} \hlkwb{<-} \hlnum{1} \hlopt{-} \hlkwd{pchisq}\hlstd{(chi,} \hlnum{1}\hlstd{)}
+\hlstd{p_val_1}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.01807421
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Получаем p-value = 0.01807421 < 0.05, отклонем гипотезу о независимости.
+Значние критерия Пирсона должно совпадать с квадратом критерия равенства частот и действительно:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{chi} \hlopt{-} \hlstd{Z}\hlopt{^}\hlnum{2}
+\end{alltt}
+\begin{verbatim}
+## [1] 0
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+
+Считаем коэффициенты неопределенности:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{m} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{15}\hlstd{,} \hlnum{0}\hlstd{,} \hlnum{11}\hlstd{,} \hlnum{5}\hlstd{),} \hlkwc{nrow} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlstd{x} \hlkwb{<-} \hlkwd{addmargins}\hlstd{(}\hlkwd{prop.table}\hlstd{(m))}
+\hlstd{H_X} \hlkwb{<-}  \hlopt{-}\hlkwd{sum}\hlstd{(x[}\hlnum{1}\hlopt{:}\hlnum{2}\hlstd{,} \hlnum{3}\hlstd{]} \hlopt{*} \hlkwd{log2}\hlstd{(x[}\hlnum{1}\hlopt{:}\hlnum{2}\hlstd{,} \hlnum{3}\hlstd{]))}
+\hlstd{H_Y} \hlkwb{<-} \hlopt{-}\hlkwd{sum}\hlstd{(x[}\hlnum{3}\hlstd{,} \hlnum{1}\hlopt{:}\hlnum{2}\hlstd{]} \hlopt{*} \hlkwd{log2}\hlstd{(x[}\hlnum{3}\hlstd{,} \hlnum{1}\hlopt{:}\hlnum{2}\hlstd{]))}
+\hlstd{H_X_Y} \hlkwb{<-} \hlopt{-}\hlkwd{sum}\hlstd{(x[}\hlnum{1}\hlstd{,} \hlnum{1}\hlopt{:}\hlnum{2}\hlstd{]} \hlopt{*} \hlkwd{log2}\hlstd{(x[}\hlnum{1}\hlstd{,} \hlnum{1}\hlopt{:}\hlnum{2}\hlstd{]))} \hlopt{-} \hlstd{x[}\hlnum{2}\hlstd{,} \hlnum{2}\hlstd{]} \hlopt{*} \hlkwd{log2}\hlstd{(x[}\hlnum{2}\hlstd{,} \hlnum{2}\hlstd{])}
+\hlstd{I} \hlkwb{<-} \hlstd{H_X} \hlopt{+} \hlstd{H_Y} \hlopt{-} \hlstd{H_X_Y}
+\hlstd{J_X} \hlkwb{<-} \hlstd{I} \hlopt{/} \hlstd{H_Y} \hlopt{*} \hlnum{100}
+\hlstd{J_Y} \hlkwb{<-} \hlstd{I} \hlopt{/} \hlstd{H_X} \hlopt{*} \hlnum{100}
+\hlstd{J} \hlkwb{<-} \hlnum{2} \hlopt{*} \hlstd{I} \hlopt{/} \hlstd{(H_X} \hlopt{+} \hlstd{H_Y)} \hlopt{*} \hlnum{100}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+Односторонние коэффициенты неопределенности:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{c}\hlstd{(J_X, J_Y)}
+\end{alltt}
+\begin{verbatim}
+## [1] 17.50476 27.44267
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Симметричный коэффициент:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{J}
+\end{alltt}
+\begin{verbatim}
+## [1] 21.37507
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{document}
+
+
+
+
+
+
+

@@ -1,0 +1,169 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}
+\usepackage{fullpage}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{amsmath }
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+\title{Отчет по домашнему заданию}
+\pretitle{\vspace{\droptitle}\centering\huge}
+\posttitle{\par}
+\author{Фахртдинов Т. А.}
+
+
+\maketitle
+Четвертая задача. Статистический анализ категориальных(зависимых) признаков.
+
+3 вариант.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{SH1} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{8.1}\hlstd{,} \hlnum{6.2}\hlstd{,} \hlnum{6.11}\hlstd{,} \hlnum{5.23}\hlstd{,} \hlnum{5.2}\hlstd{,} \hlnum{8.12}\hlstd{,} \hlnum{6.21}\hlstd{,} \hlnum{6.21}\hlstd{,} \hlnum{5}\hlstd{,} \hlnum{6}\hlstd{,} \hlnum{8.16}\hlstd{,} \hlnum{4.96}\hlstd{,} \hlnum{5.36}\hlstd{,} \hlnum{5.92}\hlstd{,} \hlnum{8.32}
+         \hlstd{,} \hlnum{8.08}\hlstd{,} \hlnum{6.52}\hlstd{,} \hlnum{5.2}\hlstd{,} \hlnum{7}\hlstd{,} \hlnum{5}\hlstd{,} \hlnum{6.3}\hlstd{,} \hlnum{6.1}\hlstd{,} \hlnum{5.95}\hlstd{,} \hlnum{5.2}\hlstd{,} \hlnum{8.5}\hlstd{,} \hlnum{8.2}\hlstd{,} \hlnum{7.3}\hlstd{,} \hlnum{6.45}\hlstd{,} \hlnum{5.2}\hlstd{,} \hlnum{6.2}
+         \hlstd{,} \hlnum{4.95}\hlstd{,} \hlnum{6.45}\hlstd{,} \hlnum{4.95}\hlstd{,} \hlnum{6.55}\hlstd{,} \hlnum{6.5}\hlstd{,} \hlnum{5.9}\hlstd{,} \hlnum{6.2}\hlstd{,} \hlnum{6.5}\hlstd{,} \hlnum{7.7}\hlstd{,} \hlnum{7.2}\hlstd{,} \hlnum{7}\hlstd{,} \hlnum{7.4}\hlstd{,} \hlnum{7.8}\hlstd{,} \hlnum{7.2}\hlstd{,} \hlnum{7}\hlstd{)}
+
+\hlstd{SH2} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{8.9}\hlstd{,} \hlnum{8.16}\hlstd{,} \hlnum{8.1}\hlstd{,} \hlnum{7.44}\hlstd{,} \hlnum{7.46}\hlstd{,} \hlnum{8.91}\hlstd{,} \hlnum{8.1}\hlstd{,}\hlnum{8.41}\hlstd{,} \hlnum{7.44}\hlstd{,} \hlnum{8.43}\hlstd{,} \hlnum{8.92}\hlstd{,} \hlnum{6.48}\hlstd{,} \hlnum{7.2}\hlstd{,} \hlnum{7.4}\hlstd{,} \hlnum{8.9}
+         \hlstd{,} \hlnum{8.9}\hlstd{,} \hlnum{8.1}\hlstd{,} \hlnum{6.88}\hlstd{,} \hlnum{8.6}\hlstd{,} \hlnum{7.2}\hlstd{,} \hlnum{8.4}\hlstd{,} \hlnum{8.4}\hlstd{,} \hlnum{8.4}\hlstd{,} \hlnum{7.4}\hlstd{,} \hlnum{8.91}\hlstd{,} \hlnum{8.9}\hlstd{,} \hlnum{8.8}\hlstd{,} \hlnum{8.1}\hlstd{,} \hlnum{7.4}\hlstd{,} \hlnum{8.4}
+         \hlstd{,} \hlnum{7.3}\hlstd{,} \hlnum{7.9}\hlstd{,} \hlnum{7.36}\hlstd{,} \hlnum{8.1}\hlstd{,} \hlnum{8}\hlstd{,} \hlnum{8.4} \hlstd{,} \hlnum{8.2}\hlstd{,} \hlnum{8.3}\hlstd{,} \hlnum{8}\hlstd{,} \hlnum{8.1}\hlstd{,} \hlnum{8.2}\hlstd{,} \hlnum{8.6}\hlstd{,} \hlnum{8.5}\hlstd{,} \hlnum{8.6}\hlstd{,} \hlnum{8.5}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Строим таблицу:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{tab} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{0}\hlstd{,} \hlnum{0}\hlstd{,} \hlnum{0}\hlstd{),} \hlkwc{nrow} \hlstd{=} \hlnum{2}\hlstd{)}
+\hlstd{tab[}\hlnum{1}\hlstd{,} \hlnum{1}\hlstd{]} \hlkwb{<-} \hlkwd{length}\hlstd{(SH1[SH1} \hlopt{<=} \hlkwd{median}\hlstd{(SH1)])}
+\hlstd{tab[}\hlnum{2}\hlstd{,} \hlnum{1}\hlstd{]} \hlkwb{<-} \hlkwd{length}\hlstd{(SH1[SH1} \hlopt{>} \hlkwd{median}\hlstd{(SH1)])}
+\hlstd{tab[}\hlnum{1}\hlstd{,} \hlnum{2}\hlstd{]} \hlkwb{<-} \hlkwd{length}\hlstd{(SH2[SH2} \hlopt{<=} \hlkwd{median}\hlstd{(SH1)])}
+\hlstd{tab[}\hlnum{2}\hlstd{,} \hlnum{2}\hlstd{]} \hlkwb{<-} \hlkwd{length}\hlstd{(SH2[SH2} \hlopt{>} \hlkwd{median}\hlstd{(SH1)])}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+Получаем:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+##           Sum
+##     23  0  23
+##     22 45  67
+## Sum 45 45  90
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Нас интересует насколько значимо различие между частотами значения в ячейке $[1, 2]$ и $[2, 1]$.
+
+$H_0:$ tab[1, 2] = tab[2, 1] (Ситуация улучшения и ухудшения после лечения равновероятны)
+
+Посчитаем точную статистику критерия Мак Немара:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{a} \hlkwb{<-} \hlstd{tab[}\hlnum{1}\hlstd{,} \hlnum{2}\hlstd{]}
+\hlstd{b} \hlkwb{<-} \hlstd{tab[}\hlnum{2}\hlstd{,} \hlnum{1}\hlstd{]}
+\hlstd{alfa} \hlkwb{<-} \hlnum{0}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{0}\hlopt{:}\hlkwd{min}\hlstd{(a, b))}
+\hlstd{\{}
+  \hlstd{alfa} \hlkwb{<-} \hlstd{alfa} \hlopt{+} \hlkwd{choose}\hlstd{(a} \hlopt{+} \hlstd{b, i)} \hlopt{*} \hlstd{(}\hlnum{1} \hlopt{/} \hlnum{2}\hlopt{^}\hlstd{(a} \hlopt{+} \hlstd{b))}
+\hlstd{\}}
+\hlstd{alfa} \hlkwb{<-} \hlnum{2} \hlopt{*} \hlstd{alfa}
+\hlstd{alfa}
+\end{alltt}
+\begin{verbatim}
+## [1] 4.768372e-07
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+alfa < 0.05, отклоняем гипотезу $H_0$, о том, что ситуация улучшения и ухудшения после лечения равновероятны.
+
+Проверим результат используя функцию из пакета exact2x2 mcnemar.exact:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: exactci}}
+
+{\ttfamily\noindent\itshape\color{messagecolor}{\#\# Loading required package: ssanv}}\end{kframe}
+\end{knitrout}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{mcnemar.exact}\hlstd{(tab)}
+\end{alltt}
+\begin{verbatim}
+## 
+## 	Exact McNemar test (with central confidence intervals)
+## 
+## data:  tab
+## b = 0, c = 22, p-value = 4.768e-07
+## alternative hypothesis: true odds ratio is not equal to 1
+## 95 percent confidence interval:
+##  0.0000000 0.1825538
+## sample estimates:
+## odds ratio 
+##          0
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Значение критерия совпадает с посчитанным нами.
+
+
+
+
+\end{document}

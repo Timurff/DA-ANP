@@ -1,0 +1,211 @@
+\documentclass{article}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}
+\usepackage{fullpage}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{amsmath }
+
+\begin{document}
+\title{Отчет по домашнему заданию}
+\pretitle{\vspace{\droptitle}\centering\huge}
+\posttitle{\par}
+\author{Фахртдинов Т. А.}
+
+
+\maketitle
+Первая задача. Описательная статистика и проверка гипотезы согласия.
+
+3 вариант.
+
+1) Моделируем величину выигрыша в 50-ти кратном повторении эксперимента, с начальными данными:
+
+$a$ = 10, $b$ = 10, $d$ = 100, $p$ = 0.5, $N$ = 50, $NN$ = 30.
+<<echo=FALSE, warning=FALSE>>=
+library(moments) 
+library(DescTools)
+library(nortest)
+res <- character()
+@
+<<echo=TRUE>>=
+n <- 50
+nn <- 30
+d <- 100
+for (i in 1 : n) {
+  x <- sample(c(10,-10), n, replace=T, prob=c(0.5, 0.5))
+  res <- c(res, sum(x))
+}
+res <- as.numeric(res)
+res
+@
+Берем выборку:
+<<>>=
+res_sample <- res[1:nn]
+@
+2) С помощью встроенных функций считаем выборочное среднее (mean) и выборочную дисперсию (var). 
+<<echo=FALSE>>=
+mean_res_sample <- mean(res_sample)
+var_res_sample <- var(res_sample)
+mean_res <- mean(res)
+var_res <- var(res)
+@
+Среднее = 0
+
+Выборочное среднее = 
+<<echo=FALSE>>=
+mean_res_sample
+@
+Дисперсия = 5000
+
+Выборочная дисперсия = 
+<<echo=FALSE>>=
+var_res_sample
+@
+\newpage
+
+3) Посчитать вероятность того, что проигрыш больше d. Посчитать вероятность того, что выигрыш больше d. Посчитать вероятность того, что выигрыш в промежутке от (-d/2; d/2).
+
+Считаем нужные нам вероятности при помощи встроенных функций:
+<<echo=FALSE>>=
+sd_res_sample <- sd(res_sample)
+@
+<<>>=
+prop_loss_gtd <- pnorm(-d, mean = mean_res, sd = sd_res_sample)
+prop_win_gtd <- 1 - pnorm(d, mean = mean_res, sd = sd_res_sample)
+prop_prof_between <- pnorm(d/2, mean = mean_res, sd = sd_res_sample) - 
+pnorm(-d/2, mean = mean_res, sd = sd_res_sample)
+@
+Получаем вероятность того, что проигрыш больше d = 
+<<echo=FALSE>>=
+prop_loss_gtd
+@
+Получаем вероятность того, что выигрыш больше d = 
+<<echo=FALSE>>=
+prop_win_gtd
+@
+Получаем вероятность того, что выигрыш в промежутке от (-d/2; d/2) = 
+<<echo=FALSE>>=
+prop_prof_between
+@
+\newpage
+
+4) Строим гистограмму и функцию выборочного распределения:
+
+<<echo=FALSE, fig.width=4.5, fig.height=4>>=
+br <- c(-200, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 200)
+hist(res, main = paste("Hist"), freq = FALSE, breaks = br)
+x <- seq(-200, 200, 1)
+y0 <- dnorm(x, mean_res, sqrt(var_res))
+lines(x, y0, type = "l", col = 'red')
+
+sort_res_sample <- sort(res_sample)
+v <- seq(from = 1/nn, to = 1, by = 1/nn)
+plot(sort_res_sample, v, type = "s")
+y1 <- pnorm(x, mean_res, sqrt(var_res))
+lines(x, y1, type = "l", col = "red")
+@
+
+\newpage
+
+5) С помощью статистики Пирсона проверяем гипотезу согласия эмпирического распределения с нормальным.
+Математическое ожидание моей случайной величины, вычисленное теоретически = 0, дисперсия = 5000. 
+
+$H_0$: Эмпирическое распределение совпадает с распределением $N(0, 5000)$
+
+
+Возьмем r = 8. Для пункта а) (параметры распределения вычисленны теоретически) посчитаем вектор вероятностей p.
+
+<<echo=TRUE, warning=FALSE>>=
+p = numeric()
+p <-  c(p, pnorm(-90, mean = 0, sd = sqrt(5000)) - 
+    pnorm(-9000, mean = 0, sd = sqrt(5000)))
+p <- c(p, pnorm(-55, mean = 0, sd = sqrt(5000)) - 
+           pnorm(-90, mean = 0, sd = sqrt(5000)))
+p <- c(p, pnorm(-30, mean = 0, sd = sqrt(5000)) - 
+           pnorm(-55, mean = 0, sd = sqrt(5000)))
+p <- c(p, pnorm(0, mean = 0, sd = sqrt(5000)) - 
+           pnorm(-30, mean = 0, sd = sqrt(5000)))
+p <- c(p, pnorm(30, mean = 0, sd = sqrt(5000)) - 
+           pnorm(0, mean = 0, sd = sqrt(5000)))
+p <- c(p, pnorm(55, mean = 0, sd = sqrt(5000)) - 
+           pnorm(30, mean = 0, sd = sqrt(5000)))
+p <- c(p, pnorm(90, mean = 0, sd = sqrt(5000)) - 
+           pnorm(55, mean = 0, sd = sqrt(5000)))
+p <- c(p, pnorm(9000, mean = 0, sd = sqrt(5000)) - 
+    pnorm(90, mean = 0, sd = sqrt(5000)))
+@
+Убедимся, что $n*p_i > 5$, а сумма $\sum_i p_i = 1$:
+<<echo=TRUE, warning=FALSE>>=
+n*p
+sum(p)
+br <- c(-9000, -90, -55, -30, 0, 30, 55, 90, 9000)
+resHIS <- hist(res, breaks = br, plot = FALSE)
+chiSQ <- (resHIS$counts - n * p)^2
+for (i in 1:length(p)) {
+  chiSQ[i] = chiSQ[i] / (n * p[i])
+}
+chiSQsumm <- sum(chiSQ)
+pValPir <- 1 - pchisq(chiSQsumm, 7)
+@
+
+В переменной chiSQsumm записанно значение статистики, а переменной pValPir записанно p - value, величины соответсвенно равны:
+<<>>=
+chiSQsumm
+pValPir
+@
+Убедимся, что результат совпадает со значение встроенной функции:
+<<warning=FALSE>>=
+chisq.test(resHIS$counts, p = p)
+@
+По полученным данным нет причин отклонить гипотезу.
+\newline
+\newline
+В пункте б) (параметры распределения оцененны по выборке), воспользуемся функцией pearson.test, пакета nortest, чтобы посчитать значение статистики:
+<<>>=
+pearson.test(res, n.classes = 11)
+@
+По полученным данным нет причин отклонить гипотезу.
+\newpage
+6) Считаем статиcтики:
+Медиана = 
+<<echo=TRUE>>=
+median_res_sample <- median(res_sample)
+median_res_sample
+@
+Стандартное отклонение = 
+<<echo=TRUE>>=
+sd_res_sample = sd(res_sample)
+sd_res_sample
+@
+Коэффицент вариации = 
+<<echo=TRUE>>=
+sd_res_sample / mean_res_sample
+@
+Рассеяние = 
+<<echo=TRUE>>=
+var_res_sample * mean_res_sample
+@
+Асимметрия = 
+<<echo=TRUE>>=
+skew_res_sample <- skewness(res_sample)
+skew_res_sample
+@
+Эксцесс = 
+<<echo=TRUE>>=
+kurt_res_sample <- kurtosis(res_sample)
+kurt_res_sample
+@
+95\% доверительный интервал = 
+<<echo=TRUE>>=
+dovInt <- MeanCI(res_sample)
+#Левая граница
+dovInt[2]
+#Правая границы
+dovInt[3]
+
+@
+
+\end{document}

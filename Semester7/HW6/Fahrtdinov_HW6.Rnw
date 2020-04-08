@@ -1,0 +1,199 @@
+\documentclass{article}
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{naturalnames}{hyperref}
+\usepackage{fullpage}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{mathrsfs}
+\usepackage{amsfonts}
+\usepackage{amsmath }
+\begin{document}
+\title{Отчет по домашнему заданию}
+\pretitle{\vspace{\droptitle}\centering\huge}
+\posttitle{\par}
+\author{Фахртдинов Т. А.}
+
+
+\maketitle
+Шестая задача. Проверка гипотез однородности для независимых
+выборок.
+
+Вариант 3.
+
+<<>>=
+TX <- c(27.6, 20.9, 55.6, 69, 23, 19.5, 8.9, 50.4)
+CA <- c(39.9, 20.7, 26.6, 13.9, 23.6, 16.2, 29.9, 13.9, 65.2, 31.4, 26, 25)
+OH <- c(1.1, 4.6, 0.7, 4, 0.7)
+mean.TX <- mean(TX)
+mean.CA <- mean(CA)
+var.TX <- var(TX)
+var.CA <- var(CA)
+n1 <- length(TX)
+n2 <- length(CA)
+@
+<<echo=FALSE>>=
+mean.OH <- mean(OH)
+var.OH <- var(OH)
+stErr.TX <- sqrt(var.TX / n1)
+stErr.CA <- sqrt(var.CA / n2)
+stErr.OH <- sqrt(var.OH / length(OH))
+@
+
+\textbf{Критерий Фишера:}
+<<>>=
+F <- var.CA / var.TX
+@
+Значение критерия и p - value:
+<<echo=FALSE>>=
+c(F, 2*min(pf(F, n1-1, n2-1), 1 - pf(F, n1-1, n2-1)))
+@
+
+Найдем значение критерия с помощью встроенной функции:
+
+<<>>=
+var.test(CA, TX)
+@
+
+Значение, которое получили мы совпало со значением встроенной функции.
+
+p-value > 0.05~--- нет оснований отклонить гипотезу о равенстве дисперсий.
+
+\newpage
+\textbf{Критерий Стьюдента:}
+
+Т.к. мы не отклонили гипотезу о равенстве дисперсий, используется следующий критерий Стьюдента (неизвестные одинаковые дисперсии):
+$$ T = \dfrac{(\bar{x}- \bar{y})\sqrt{n_{1}+n_{2}-2}}{\sqrt{\dfrac{1}{n_{1}}+\dfrac{1}{n_{2}}}\sqrt{(n_{1}-1)S_{1}^{2}+(n_{2}-1)S_{2}^{2}}} \;\; \sim \mathbf{T}(n_{1}+n_{2}-2).$$
+
+$H_0: \mu_1 = \mu_2$
+
+<<>>=
+T <- (mean.TX - mean.CA) * sqrt(n1 + n2 - 2) /
+     (sqrt(1/n1 + 1/n2) * sqrt((n1-1) * var.TX + (n2 - 1) * var.CA))
+@
+Значение критерия и p - value:
+<<echo=FALSE>>=
+c(T, 2*min(pt(T, n1 + n2 -2), 1 - pt(T, n1 + n2 -2)))
+@
+Найдем значение критерия с помощью встроенной функции:
+<<>>=
+t.test(TX, CA, var.equal = TRUE)
+@
+
+Значение, которое получили мы совпало со значением встроенной функции.
+
+p-value > 0.05~--- нет оснований отклонить нулевую гипотезу о равенстве средних.
+
+Для TX, среднее \textpm ошибка среднего: 34.363 \textpm 7.480.
+
+Для CA, среднее \textpm ошибка среднего: 27.692 \textpm 4.049.
+
+\newpage
+
+\textbf{Найдем доверительные интервалы для средних, возьмем уровень значимости} \alpha = 0.05:
+
+Для среднего TX:
+
+<<>>=
+alpha <- 0.05
+
+q = qt(1 - alpha/2, length(TX) - 1) * sd(TX)/sqrt(length(TX))
+c(mean(TX) - q, mean(TX) + q)
+@
+Для среднего CA:
+
+<<>>=
+q = qt(1 - alpha/2, length(CA) - 1) * sd(CA)/sqrt(length(CA))
+c(mean(CA) - q, mean(CA) + q)
+@
+Для среднего OH:
+
+<<>>=
+q = qt(1 - alpha/2, length(OH) - 1) * sd(OH)/sqrt(length(OH))
+c(mean(OH) - q, mean(OH) + q)
+@
+
+\textbf{Используя статистику Фишера, проверить однородность выборок, относящихся ко всем штатам одновременно.}
+
+<<>>=
+r <- 3
+N <- length(c(OH, TX, CA))
+len <- c(length(OH), length(TX), length(CA))
+m <- mean(c(OH, TX, CA))
+x <- c(mean(OH), mean(TX), mean(CA))
+Q1 <- sum(len * (x - m)^2)
+Q2 <- sum((OH - x[1])^2) + sum((TX - x[2])^2) + sum((CA - x[3])^2)
+F <- (Q1/(r - 1)) / (Q2/(N - r))
+@
+Значение критерия и p-value:
+<<echo=FALSE>>=
+c(F, 1 - pf(F, r-1, N - r))
+@
+\newpage
+Найдем значение критерия с помощью встроенной функции:
+<<>>=
+CITY <-data.frame(hisp = c(OH,TX,CA),
+                  state = rep(c("OH","TX","CA"), 
+                  len))
+summary(aov(hisp~state, data = CITY))
+@
+Значение, которое получили мы совпало со значением встроенной функции.
+
+p-value < 0.5~--- Нулевая гипотеза о равенстве средних отвергается.
+
+Для TX, среднее \textpm ошибка среднего: 34.363 \textpm 7.480.
+
+Для CA, среднее \textpm ошибка среднего: 27.692 \textpm 4.049.
+
+Для OH, среднее \textpm ошибка среднего: 2.22 \textpm 0.858.
+
+
+\textbf{Проверяем значимость парных статистик (наведение контрастов):}
+<<>>=
+temp = sqrt(Q2 / (N - r))
+T1 <- (mean.TX - mean.CA) / (temp * sqrt(1 / n1 + 1 / n2))
+T2 <- (mean.TX - mean(OH)) / (temp * sqrt(1 / n1 + 1 / length(OH)))
+T3 <- (mean.CA - mean(OH)) / (temp * sqrt(1 / n2 + 1 / length(OH)))
+@
+Значения критерия и соответствующии p-value:
+<<echo=FALSE>>=
+pval <- c(2 * min(pt(T1, N - r), 1 - pt(T1, N - r)),
+          2 * min(pt(T2, N - r), 1 - pt(T2, N - r)),
+          2 * min(pt(T3, N - r), 1 - pt(T3, N - r)))
+c(T1, T2, T3)
+pval
+@
+Воспользуемся встроенной функцией:
+<<echo=FALSE>>=
+c <- c(OH, TX, CA)
+y <- c(rep(1, len[1]),rep(2, len[2]),rep(3, len[3]))
+y <- as.factor(y)
+pairwise.t.test(c, y, p.adjust.method = "none")
+@
+Значения совпадают с полученными нами.
+
+0.357145817 > 0.05, нет оснований отклонить гипотезу о незначительности отклонений внутригрупповых средних у TX и CA.
+
+Для остальных пар p-value < 0.05 и гипотеза о незначительности отклонений внутригрупповых средних отклоняется.
+
+\newpage
+
+Построим boxplot для наших данных:
+
+<<echo=TRUE, fig.height=6, warning=FALSE>>=
+a <- data.frame(hisp = TX, state = 'TX')
+b <- data.frame(hisp = CA, state = 'CA')
+c <- data.frame(hisp = OH, state = 'OH')
+STATES <- rbind(a, b, c)
+
+means <- aggregate(hisp ~ state, STATES, mean)
+means$hisp <- round(means$hisp, 3)
+library(ggplot2)
+ggplot(data=STATES, aes(x=state, y=hisp)) + geom_boxplot(aes(fill=state)) +
+stat_summary(fun.y = mean, colour="red", geom="point",
+shape=18, size=2,show.legend  = FALSE) +
+geom_text(data = means, aes(label = hisp, y = hisp + 1),size = 2 )
+@
+
+
+\end{document}
